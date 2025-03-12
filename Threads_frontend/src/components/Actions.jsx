@@ -19,6 +19,9 @@ import { useRecoilState, useRecoilValue } from "recoil";
 import userAtom from "../atoms/userAtom";
 import useShowToast from "../hooks/useShowToast";
 import postsAtom from "../atoms/postsAtom";
+import keys from keys.json
+
+const backend = keys.backend;
 
 const Actions = ({ post }) => {
 	const user = useRecoilValue(userAtom);
@@ -36,7 +39,7 @@ const Actions = ({ post }) => {
 		if (isLiking) return;
 		setIsLiking(true);
 		try {
-			const res = await fetch("/api/posts/like/" + post._id, {
+			const res = await fetch(`${backend}/api/posts/like/` + post._id, {
 				method: "PUT",
 				headers: {
 					"Content-Type": "application/json",
@@ -78,7 +81,7 @@ const Actions = ({ post }) => {
 		if (isReplying) return;
 		setIsReplying(true);
 		try {
-			const res = await fetch("/api/posts/reply/" + post._id, {
+			const res = await fetch(`${backend}/api/posts/reply/` + post._id, {
 				method: "PUT",
 				headers: {
 					"Content-Type": "application/json",

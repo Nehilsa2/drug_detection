@@ -7,6 +7,7 @@ ML-backend/__pycache__/
 
 Threads_frontend/node_modules/
 Threads_frontend/.env
+Threads_frontend/src/keys.json
 
 Threads_backend/.env
 Threads_backend/node_modules/
