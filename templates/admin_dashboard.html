@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Admin Dashboard</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Bitter:ital,wght@0,100..900;1,100..900&family=Dancing+Script:wght@400..700&family=Merriweather:ital,wght@0,300;0,400;0,700;0,900;1,300;1,400;1,700;1,900&family=Nunito:ital,wght@0,200..1000;1,200..1000&family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Bitter:ital,wght@0,100..900;1,100..900&family=Dancing+Script:wght@400..700&family=Merriweather:ital,wght@0,300;0,400;0,700;0,900;1,300;1,400;1,700;1,900&family=Nunito+Sans:ital,opsz,wght@0,6..12,200..1000;1,6..12,200..1000&family=Nunito:ital,wght@0,200..1000;1,200..1000&family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Bitter:ital,wght@0,100..900;1,100..900&family=Dancing+Script:wght@400..700&family=Merriweather:ital,wght@0,300;0,400;0,700;0,900;1,300;1,400;1,700;1,900&family=Nunito+Sans:ital,opsz,wght@0,6..12,200..1000;1,6..12,200..1000&family=Nunito:ital,wght@0,200..1000;1,200..1000&family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap"
+      rel="stylesheet"
+    />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.0.0/socket.io.min.js"></script>
+    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+    <style>
+      @keyframes fadeInUp {
+        0% {
+          opacity: 0;
+          transform: translateY(30px);
+        }
+
+        100% {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      @keyframes pulse {
+        0% {
+          box-shadow: 0 0 0 rgba(52, 152, 219, 0.7);
+        }
+
+        50% {
+          box-shadow: 0 0 10px rgba(52, 152, 219, 0.9);
+        }
+
+        100% {
+          box-shadow: 0 0 0 rgba(52, 152, 219, 0.7);
+        }
+      }
+
+      body {
+        font-family: Arial, sans-serif;
+        background-color: #e2f1e7;
+        color: aliceblue;
+        overflow-x: hidden;
+        margin: 0;
+        padding: 0;
+      }
+
+      .title,
+      h1,
+      h2 {
+        text-align: center;
+        animation: fadeInUp 1s ease-out;
+      }
+
+      .title {
+        background-color: #243642;
+        padding: 10px;
+        margin-bottom: 10px;
+        font-family: "Nunito", sans-serif;
+        font-optical-sizing: auto;
+        font-style: normal;
+        color: white;
+        top: 0;
+        z-index: 999;
+        color: white;
+      }
+      #tt {
+        color: aliceblue;
+      }
+
+      h1 {
+        font-size: 2.5em;
+        color: #243642;
+      }
+
+      h2 {
+        margin-top: 40px;
+        font-size: 1.8em;
+        color: #243642;
+      }
+
+      .Btn-Container {
+        display: flex;
+        width: 170px;
+        height: fit-content;
+        background-color: #1d2129;
+        border-radius: 40px;
+        box-shadow: 0px 5px 10px #bebebe;
+        justify-content: space-between;
+        align-items: center;
+        border: none;
+        cursor: pointer;
+        position: relative;
+        left: 42rem;
+        margin-top: 100px;
+      }
+
+      .icon-Container {
+        width: 45px;
+        height: 45px;
+        background-color: #f59aff;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 50%;
+        border: 3px solid #1d2129;
+      }
+
+      .text {
+        width: calc(170px - 45px);
+        height: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        font-size: 1.1em;
+        letter-spacing: 1.2px;
+        font-family: "Nunito Sans", sans-serif;
+        font-optical-sizing: auto;
+      }
+
+      .icon-Container svg {
+        transition-duration: 1.5s;
+      }
+
+      .Btn-Container:hover .icon-Container svg {
+        transition-duration: 1.5s;
+        animation: arrow 1s linear infinite;
+      }
+
+      @keyframes arrow {
+        0% {
+          opacity: 0;
+          margin-left: 0px;
+        }
+
+        100% {
+          opacity: 1;
+          margin-left: 10px;
+        }
+      }
+
+      .graph-container {
+        margin: 20px auto;
+        padding: 20px;
+        background-color: #387478;
+        border-radius: 10px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        max-width: 1400px;
+        opacity: 0;
+        animation: fadeInUp 1s ease-out forwards;
+      }
+
+      #kmeans-graph,
+      #network-graph {
+        display: none;
+        height: 500px;
+        /* margin: 20px 0; */
+      }
+
+      footer {
+        text-align: center;
+        padding: 10px;
+        background-color: #629584;
+        color: white;
+        position: relative;
+        bottom: 0;
+        width: 100%;
+        animation: fadeInUp 1s ease-out;
+      }
+
+      #flagged-users {
+        width: 90%;
+        margin: 20px auto;
+        background-color: #1d2129;
+        color: aliceblue;
+        border-collapse: collapse;
+        animation: fadeInUp 1s ease-out;
+        border-radius: 5px;
+      }
+
+      #flagged-users th,
+      #flagged-users td {
+        border: 1px solid #629584;
+        padding: 10px;
+        text-align: center;
+        animation: fadeInUp 1s ease-out;
+      }
+
+      #flagged-users th {
+        background-color: #629584;
+        animation: fadeInUp 1s ease-out;
+        font-family: "Nunito Sans", sans-serif;
+        font-optical-sizing: auto;
+      }
+
+      .foot {
+        height: 120px;
+        padding-top: 80px;
+        font: bold;
+        font-size: 30px;
+      }
+    </style>
+  </head>
+
+  <body>
+    <div class="title">
+      <h1 id="tt">Admin Dashboard</h1>
+    </div>
+    <button id="start-analysis" class="Btn-Container">
+      <span class="text">Start analysis</span>
+      <span class="icon-Container">
+        <svg
+          width="16"
+          height="19"
+          viewBox="0 0 16 19"
+          fill="nones"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <circle cx="1.61321" cy="1.61321" r="1.5" fill="black"></circle>
+          <circle cx="5.73583" cy="1.61321" r="1.5" fill="black"></circle>
+          <circle cx="5.73583" cy="5.5566" r="1.5" fill="black"></circle>
+          <circle cx="9.85851" cy="5.5566" r="1.5" fill="black"></circle>
+          <circle cx="9.85851" cy="9.5" r="1.5" fill="black"></circle>
+          <circle cx="13.9811" cy="9.5" r="1.5" fill="black"></circle>
+          <circle cx="5.73583" cy="13.4434" r="1.5" fill="black"></circle>
+          <circle cx="9.85851" cy="13.4434" r="1.5" fill="black"></circle>
+          <circle cx="1.61321" cy="17.3868" r="1.5" fill="black"></circle>
+          <circle cx="5.73583" cy="17.3868" r="1.5" fill="black"></circle>
+        </svg>
+      </span>
+    </button>
+
+    <h2>Clustering of flagged users</h2>
+    <div class="graph-container" id="kmeans-graph"></div>
+
+    <h2>Flagged User Interaction Network</h2>
+    <div class="graph-container" id="network-graph"></div>
+
+    <!-- New Flagged Users Section -->
+    <h2>Flagged User Data</h2>
+    <div class="graph-container">
+      <table id="flagged-users">
+        <thead>
+          <tr>
+            <th>User ID</th>
+            <th>Tag</th>
+            <th>Drug Classes</th>
+            <th>Suspicious Word Count</th>
+            <th>Suspicious Words</th>
+          </tr>
+        </thead>
+        <tbody id="flagged-users-body">
+          <!-- Data will be populated here -->
+        </tbody>
+      </table>
+    </div>
+
+    <footer class="foot">Admin Dashboard &copy; Kitchen Coders</footer>
+
+    <script>
+      const socket = io.connect("http://localhost:8080/admin");
+
+      // Start analysis on button click
+      document.getElementById("start-analysis").onclick = () => {
+        document.getElementById("kmeans-graph").style.display = "block";
+        document.getElementById("network-graph").style.display = "block";
+        socket.emit("start_analysis");
+      };
+
+      // Listen for graph updates
+      socket.on("graph_update", (data) => {
+        Plotly.newPlot("kmeans-graph", JSON.parse(data.kmeans));
+        Plotly.newPlot("network-graph", JSON.parse(data.network));
+
+        // Populate flagged user table
+        const tbody = document.getElementById("flagged-users-body");
+        tbody.innerHTML = ""; // Clear previous data
+        data.flagged_users.forEach((user) => {
+          const row = `<tr>
+                    <td>${user.user_id}</td>
+                    <td>${user.tag}</td>
+                    <td>${user.classes.join(", ")}</td>
+                    <td>${user.suspicious_word_count}</td>
+                    <td>${user.suspicious_words.join(", ")}</td>
+                </tr>`;
+          tbody.innerHTML += row;
+        });
+      });
+    </script>
+  </body>
+</html>

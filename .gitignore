@@ -1,0 +1,12 @@
+ML-backend/__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+.env
+
+Threads_frontend/node_modules/
+Threads_frontend/.env
+
+Threads_backend/.env
+Threads_backend/node_modules/

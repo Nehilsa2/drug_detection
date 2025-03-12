@@ -1,0 +1,8 @@
+node_modules
+.env
+.git
+__pycache__
+*.log
+*.tar
+*.zip
+*.sqlite

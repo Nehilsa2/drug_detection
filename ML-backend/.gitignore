@@ -1,0 +1,6 @@
+./ThreadClone/node_modules
+./ThreadClone/package-lock.json
+./ThreadClone/backend/node_modules
+./ThreadClone/backend/package-lock.json
+./ThreadClone/frontend/node_modules
+./ThreadClone/frontend/package-lock.json
