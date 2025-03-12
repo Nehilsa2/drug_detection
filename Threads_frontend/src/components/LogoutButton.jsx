@@ -4,7 +4,7 @@ import userAtom from "../atoms/userAtom";
 import useShowToast from "../hooks/useShowToast";
 import { FiLogOut } from "react-icons/fi";
 
-import keys from keys.json
+import keys from "../keys.json"
 
 const backend = keys.backend;
 

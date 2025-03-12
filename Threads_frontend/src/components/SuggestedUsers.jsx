@@ -2,7 +2,7 @@ import { Box, Flex, Skeleton, SkeletonCircle, Text } from "@chakra-ui/react";
 import { useEffect, useState } from "react";
 import SuggestedUser from "./SuggestedUser";
 import useShowToast from "../hooks/useShowToast";
-import keys from keys.json
+import keys from "../keys.json"
 
 const backend = keys.backend;
 

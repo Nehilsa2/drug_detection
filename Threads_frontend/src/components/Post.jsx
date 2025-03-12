@@ -10,7 +10,7 @@ import { DeleteIcon } from "@chakra-ui/icons";
 import { useRecoilState, useRecoilValue } from "recoil";
 import userAtom from "../atoms/userAtom";
 import postsAtom from "../atoms/postsAtom";
-import keys from keys.json
+import keys from "../keys.json"
 
 const backend = keys.backend;
 

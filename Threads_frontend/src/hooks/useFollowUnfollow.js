@@ -2,7 +2,7 @@ import { useState } from "react";
 import useShowToast from "./useShowToast";
 import userAtom from "../atoms/userAtom";
 import { useRecoilValue } from "recoil";
-import keys from keys.json
+import keys from "../keys.json"
 
 const backend = keys.backend;
 

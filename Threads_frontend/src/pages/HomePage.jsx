@@ -6,7 +6,7 @@ import { useRecoilState } from "recoil";
 import postsAtom from "../atoms/postsAtom";
 import SuggestedUsers from "../components/SuggestedUsers";
 
-import keys from keys.json
+import keys from "../keys.json"
 
 const backend = keys.backend;
 

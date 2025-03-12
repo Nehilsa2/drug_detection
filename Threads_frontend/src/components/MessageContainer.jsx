@@ -9,7 +9,7 @@ import userAtom from "../atoms/userAtom";
 import { useSocket } from "../context/SocketContext.jsx";
 import messageSound from "../assets/sounds/message.mp3";
 
-import keys from keys.json
+import keys from "../keys.json"
 
 const backend = keys.backend;
 const MessageContainer = () => {

@@ -9,7 +9,7 @@ import { useRecoilState, useRecoilValue } from "recoil";
 import { conversationsAtom, selectedConversationAtom } from "../atoms/messagesAtom";
 import userAtom from "../atoms/userAtom";
 import { useSocket } from "../context/SocketContext";
-import keys from keys.json
+import keys from "../keys.json"
 
 const backend = keys.backend;
 

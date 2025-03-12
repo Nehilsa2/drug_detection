@@ -2,7 +2,7 @@ import { Button, Text } from "@chakra-ui/react";
 import useShowToast from "../hooks/useShowToast";
 import useLogout from "../hooks/useLogout";
 
-import keys from keys.json
+import keys from "../keys.json"
 
 const backend = keys.backend;
 

@@ -7,7 +7,7 @@ import Post from "../components/Post";
 import useGetUserProfile from "../hooks/useGetUserProfile";
 import { useRecoilState } from "recoil";
 import postsAtom from "../atoms/postsAtom";
-import keys from keys.json
+import keys from "../keys.json"
 
 const backend = keys.backend;
 

@@ -15,7 +15,7 @@ import { useRecoilState } from "recoil";
 import userAtom from "../atoms/userAtom";
 import usePreviewImg from "../hooks/usePreviewImg";
 import useShowToast from "../hooks/useShowToast";
-import keys from keys.json
+import keys from "../keys.json"
 
 const backend = keys.backend;
 

@@ -20,7 +20,7 @@ import { useSetRecoilState } from "recoil";
 import authScreenAtom from "../atoms/authAtom";
 import useShowToast from "../hooks/useShowToast";
 import userAtom from "../atoms/userAtom";
-import keys from keys.json
+import keys from "../keys.json"
 
 const backend = keys.backend;
 

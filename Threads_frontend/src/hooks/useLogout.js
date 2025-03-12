@@ -1,7 +1,7 @@
 import userAtom from "../atoms/userAtom";
 import { useSetRecoilState } from "recoil";
 import useShowToast from "./useShowToast";
-import keys from keys.json
+import keys from "../keys.json"
 
 const backend = keys.backend;
 

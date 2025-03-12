@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import useShowToast from "./useShowToast";
-import keys from keys.json
+import keys from "../keys.json"
 
 const backend = keys.backend;
 

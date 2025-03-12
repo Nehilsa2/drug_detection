@@ -26,7 +26,7 @@ import userAtom from "../atoms/userAtom";
 import useShowToast from "../hooks/useShowToast";
 import postsAtom from "../atoms/postsAtom";
 import { useParams } from "react-router-dom";
-import keys from keys.json
+import keys from "../keys.json"
 
 const backend = keys.backend;
 
