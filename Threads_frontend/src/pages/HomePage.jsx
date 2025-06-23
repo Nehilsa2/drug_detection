@@ -6,9 +6,6 @@ import { useRecoilState } from "recoil";
 import postsAtom from "../atoms/postsAtom";
 import SuggestedUsers from "../components/SuggestedUsers";
 
-import keys from "../keys.json"
-
-const backend = keys.backend;
 
 const HomePage = () => {
 	const [posts, setPosts] = useRecoilState(postsAtom);
@@ -19,7 +16,7 @@ const HomePage = () => {
 			setLoading(true);
 			setPosts([]);
 			try {
-				const res = await fetch(`${backend}/api/posts/feed`);
+				const res = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/posts/feed`);
 				const data = await res.json();
 				if (data.error) {
 					showToast("Error", data.error, "error");

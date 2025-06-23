@@ -2,9 +2,7 @@ import { useState } from "react";
 import useShowToast from "./useShowToast";
 import userAtom from "../atoms/userAtom";
 import { useRecoilValue } from "recoil";
-import keys from "../keys.json"
 
-const backend = keys.backend;
 
 const useFollowUnfollow = (user) => {
 	const currentUser = useRecoilValue(userAtom);
@@ -21,7 +19,7 @@ const useFollowUnfollow = (user) => {
 
 		setUpdating(true);
 		try {
-			const res = await fetch(`${backend}/api/users/follow/${user._id}`, {
+			const res = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/users/follow/${user._id}`, {
 				method: "POST",
 				headers: {
 					"Content-Type": "application/json",

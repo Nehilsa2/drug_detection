@@ -2,9 +2,7 @@ import { Button, Text } from "@chakra-ui/react";
 import useShowToast from "../hooks/useShowToast";
 import useLogout from "../hooks/useLogout";
 
-import keys from "../keys.json"
 
-const backend = keys.backend;
 
 export const SettingsPage = () => {
 	const showToast = useShowToast();
@@ -14,7 +12,7 @@ export const SettingsPage = () => {
 		if (!window.confirm("Are you sure you want to freeze your account?")) return;
 
 		try {
-			const res = await fetch(`${backend}/api/users/freeze`, {
+			const res = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/users/freeze`, {
 				method: "PUT",
 				headers: { "Content-Type": "application/json" },
 			});
