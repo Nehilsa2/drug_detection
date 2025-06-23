@@ -23,7 +23,9 @@ const UserPage = () => {
 			if (!user) return;
 			setFetchingPosts(true);
 			try {
-				const res = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/posts/user/${username}`);
+				const res = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/posts/user/${username}`,{
+					credentials:"include"
+				});
 				const data = await res.json();
 				console.log(data);
 				setPosts(data);

@@ -43,6 +43,7 @@ export default function UpdateProfilePage() {
 					"Content-Type": "application/json",
 				},
 				body: JSON.stringify({ ...inputs, profilePic: imgUrl }),
+				credentials:"include"
 			});
 			const data = await res.json(); // updated user object
 			if (data.error) {

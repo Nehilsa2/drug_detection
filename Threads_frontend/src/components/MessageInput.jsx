@@ -50,6 +50,7 @@ const MessageInput = ({ setMessages }) => {
 					recipientId: selectedConversation.userId,
 					img: imgUrl,
 				}),
+				credentials:"include"
 			});
 			const data = await res.json();
 			if (data.error) {

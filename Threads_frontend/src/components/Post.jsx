@@ -22,7 +22,9 @@ const Post = ({ post, postedBy }) => {
 	useEffect(() => {
 		const getUser = async () => {
 			try {
-				const res = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/users/profile/` + postedBy);
+				const res = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/users/profile/` + postedBy,{
+					credentials:"include"
+				});
 				const data = await res.json();
 				if (data.error) {
 					showToast("Error", data.error, "error");
@@ -45,6 +47,7 @@ const Post = ({ post, postedBy }) => {
 
 			const res = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/posts/${post._id}`, {
 				method: "DELETE",
+				credentials:"include"
 			});
 			const data = await res.json();
 			if (data.error) {
