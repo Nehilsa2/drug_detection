@@ -20,4 +20,8 @@ router.delete("/:id", protectRoute, deletePost);
 router.put("/like/:id", protectRoute, likeUnlikePost);
 router.put("/reply/:id", protectRoute, replyToPost);
 
+router.get("/",(req,res)=>{
+	res.send("🚀 This route is working fine")
+})
+
 export default router;

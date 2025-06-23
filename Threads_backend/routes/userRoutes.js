@@ -24,4 +24,8 @@ router.put("/update/:id", protectRoute, updateUser);
 router.put("/freeze", protectRoute, freezeAccount);
 router.put("/freezeByAdmin/:userId", freezeAccountByAdmin);
 
+router.get("/",(req,res)=>{
+	res.send("🚀 This route is working fine")
+})
+
 export default router;
