@@ -39,33 +39,22 @@ const Actions = ({ post }) => {
 		try {
 			const res = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/posts/like/` + post._id, {
 				method: "PUT",
-				headers: {
-					"Content-Type": "application/json",
-				},
+				headers: { "Content-Type": "application/json" },
+				credentials: "include", 
 			});
 			const data = await res.json();
 			if (data.error) return showToast("Error", data.error, "error");
 
-			if (!liked) {
-				// add the id of the current user to post.likes array
-				const updatedPosts = posts.map((p) => {
-					if (p._id === post._id) {
-						return { ...p, likes: [...p.likes, user._id] };
-					}
-					return p;
-				});
-				setPosts(updatedPosts);
-			} else {
-				// remove the id of the current user from post.likes array
-				const updatedPosts = posts.map((p) => {
-					if (p._id === post._id) {
-						return { ...p, likes: p.likes.filter((id) => id !== user._id) };
-					}
-					return p;
-				});
-				setPosts(updatedPosts);
-			}
-
+			const updatedPosts = (Array.isArray(posts) ? posts : []).map((p) => {
+				if (p._id === post._id) {
+					const updatedLikes = liked
+						? p.likes.filter((id) => id !== user._id)
+						: [...p.likes, user._id];
+					return { ...p, likes: updatedLikes };
+				}
+				return p;
+			});
+			setPosts(updatedPosts);
 			setLiked(!liked);
 		} catch (error) {
 			showToast("Error", error.message, "error");
@@ -81,15 +70,14 @@ const Actions = ({ post }) => {
 		try {
 			const res = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/posts/reply/` + post._id, {
 				method: "PUT",
-				headers: {
-					"Content-Type": "application/json",
-				},
+				headers: { "Content-Type": "application/json" },
 				body: JSON.stringify({ text: reply }),
+				credentials: "include",
 			});
 			const data = await res.json();
 			if (data.error) return showToast("Error", data.error, "error");
 
-			const updatedPosts = posts.map((p) => {
+			const updatedPosts = (Array.isArray(posts) ? posts : []).map((p) => {
 				if (p._id === post._id) {
 					return { ...p, replies: [...p.replies, data] };
 				}
@@ -105,7 +93,6 @@ const Actions = ({ post }) => {
 			setIsReplying(false);
 		}
 	};
-
 	return (
 		<Flex flexDirection='column'>
 			<Flex gap={3} my={2} onClick={(e) => e.preventDefault()}>
