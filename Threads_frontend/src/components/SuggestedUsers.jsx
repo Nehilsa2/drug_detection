@@ -12,7 +12,13 @@ const SuggestedUsers = () => {
 		const getSuggestedUsers = async () => {
 			setLoading(true);
 			try {
-				const res = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/users/suggested`);
+				const res = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/users/suggested`, {
+					method: "GET",
+					headers: {
+						"Content-Type": "application/json",
+					},
+					credentials: "include", 
+				});
 				const data = await res.json();
 				if (data.error) {
 					showToast("Error", data.error, "error");
