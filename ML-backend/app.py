@@ -13,13 +13,14 @@ from werkzeug.utils import secure_filename
 import io
 from PIL import Image
 from is_Drug import *
+import os
 
 # Initialize Flask and SocketIO
 app = Flask(__name__)
 socketio = SocketIO(app)
 
 # Connect to MongoDB
-client = pymongo.MongoClient("mongodb://localhost:27017/")
+client = pymongo.MongoClient(os.environ.get("MONGO_URI"))
 db = client["test"]
 user_collection = db["patterndb"]
 interaction_collection = db["interactions"]
@@ -201,5 +202,10 @@ def index():
 
 
 # Run app
+# if __name__ == '__main__':
+#     socketio.run(app, debug=True, port=8080)
+
+
 if __name__ == '__main__':
-    socketio.run(app, debug=True, port=8080)
+    port = int(os.environ.get("PORT", 7860))
+    socketio.run(app, host="0.0.0.0", port=port)
