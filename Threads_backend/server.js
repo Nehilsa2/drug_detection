@@ -48,7 +48,9 @@ app.use("/api/messages", messageRoutes);
 //     res.sendFile(path.resolve(__dirname, "Threads_frontend", "dist", "index.html"));
 //   });
 // }
-
+app.get("/",(req,res)){
+  res.send("🚀 Thread Backend is live and running")
+}
 server.listen(PORT, () =>
   console.log(`Server started at http://localhost:${PORT}`)
 );
