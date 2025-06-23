@@ -11,7 +11,10 @@ import { app, server } from "./socket/socket.js";
 import job from "./cron/cron.js";
 import cors from 'cors';
 
-app.use(cors());
+app.use(cors({
+   origin: "https://threads-frontend-8fph.onrender.com", 
+  credentials: true,
+}));
 
 dotenv.config();
 
