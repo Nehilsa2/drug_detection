@@ -83,3 +83,7 @@ export JWT_SECRET=<your_jwt_secret>
 
 # Run the app
 python app.py
+
+## 🚀 For Admin_Dashboard
+
+## 🚀 Run Locally
