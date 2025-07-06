@@ -5,7 +5,7 @@ def isDrug(img_name, text):
     res1 = json.loads(img_detection(img_name))
     res2 = detect_drug_keywords(text)
     flag = res1["isFlagged"] or res2["isFlagged"]
-    print(type(res1),type(res2) )
+    
     res={
         "isFlagged": flag,
         "tag": res1["tag"],

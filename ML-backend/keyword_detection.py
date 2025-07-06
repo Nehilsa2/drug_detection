@@ -34,8 +34,4 @@ def detect_drug_keywords(text):
 
 __all__ = ["detect_drug_keywords"]
 
-# Example usage
-sample_text = "have bm1 and ibo last had snow and blow"
-result = detect_drug_keywords(sample_text)
-print(result)  
 

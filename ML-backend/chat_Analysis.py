@@ -1,6 +1,11 @@
 import pymongo
 import time
+from dotenv import load_dotenv
+import os
 from keyword_detection import detect_drug_keywords
+
+load_dotenv()
+
 def monitor_changes(collection):
     """
     Continuously monitors a MongoDB collection for changes.
@@ -19,11 +24,11 @@ def monitor_changes(collection):
                     txt = full_document["text"]
                     img = full_document["img"]
                     sender = full_document["sender"]
-                    print(txt)
+                    
                     if not img:
                         
                         MlData = detect_drug_keywords(txt)
-                        print(MlData["isFlagged"])
+                        
                         if MlData["isFlagged"]:
                             is_flagged_user = flagged_collection.find_one({"_id": sender})
                             if is_flagged_user:
@@ -57,8 +62,8 @@ def monitor_changes(collection):
             time.sleep(1)  # Wait for 1 second before retrying
 
 
-if __name__ == "__main__":
-    client = pymongo.MongoClient("mongodb+srv://mayanksahu1005:d3qjjq4ICx30XudJ@cluster0.dceas.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0")  # Replace with your connection string
+def chat_analysis():
+    client = pymongo.MongoClient(os.getenv("MONGO_URI"))  # Replace with your connection string
     db = client["test"]
     collection = db["messages"]
     conversation_collection = db["conversations"]
@@ -67,3 +72,5 @@ if __name__ == "__main__":
     interaction_collection =db["interactions"]
 
     monitor_changes(collection)
+
+__all__ = ["chat_analysis"]

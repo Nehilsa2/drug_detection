@@ -12,58 +12,61 @@ import plotly
 from werkzeug.utils import secure_filename
 import io
 from PIL import Image
+from dotenv import load_dotenv, dotenv_values 
+from bson import json_util
+from collections import Counter
 from is_Drug import *
-import os
+from post_Analysis import post_analysis
+from chat_Analysis import chat_analysis
 
+load_dotenv()
 # Initialize Flask and SocketIO
 app = Flask(__name__)
-socketio = SocketIO(app)
+socketio = SocketIO(app,cors_allowed_origins="*")
 
 # Connect to MongoDB
-client = pymongo.MongoClient(os.environ.get("MONGO_URI"))
+client = pymongo.MongoClient(os.getenv("MONGO_URI"))
 db = client["test"]
 user_collection = db["patterndb"]
 interaction_collection = db["interactions"]
 flagged_user_collection = db["flaggedusers"]
+
+
+
+# chat_analysis()  # Start monitoring chat messages
+# post_analysis()  # Start monitoring posts
+def get_flagged_words():
+    """
+    Fetches flagged words from the database.
+    
+    Returns:
+        list: A list of flagged words.
+    """
+    flagged_word_data = flagged_user_collection.find({}, {"_id": 0, "suspicious_words": 1})
+    flagged_words = []
+    for item in flagged_word_data:
+        flagged_words.extend(item.get('suspicious_words', []))
+        # Count frequency
+    frequency = Counter(flagged_words)
+
+    # Separate lists for items and counts
+    words_list = list(frequency.keys())
+    count_list = list(frequency.values())
+
+    res = {
+        "words": words_list,
+        "counts": count_list
+    }
+    return res
+
+
 # Data analysis and plotting function
 def analyze_and_plot_data():
-    # Fetch user data from MongoDB
-    user_data = list(user_collection.find({}, {"_id": 0}))
-    df_users = pd.DataFrame(user_data)
 
-    # Check if there's enough data to perform clustering
-    if df_users.empty or len(df_users) < 2:
-        return None, None
-
-    # Standardize features and perform clustering
-    scaler = StandardScaler()
-    features = scaler.fit_transform(df_users[['drug_mentions', 'suspicious_words']])
-    
-    # Choose optimal k (e.g., 3 clusters) for clustering
-    k_optimal = 3
-    kmeans = KMeans(n_clusters=k_optimal, random_state=42)
-    df_users['cluster'] = kmeans.fit_predict(features)
-
-    # K-Means clustering plot between drug mentions and suspicious words
-    fig_kmeans = go.Figure()
-    for i in range(k_optimal):
-        cluster_data = df_users[df_users['cluster'] == i]
-        fig_kmeans.add_trace(go.Scatter(
-            x=cluster_data['drug_mentions'],
-            y=cluster_data['suspicious_words'],
-            mode='markers',
-            name=f'Cluster {i}',
-            marker=dict(size=10)
-        ))
-
-    fig_kmeans.update_layout(
-        title='K-Means Clustering of Users',
-        xaxis_title='Drug Mentions',
-        yaxis_title='Suspicious Words'
-    )
 
     # Fetch interaction data to create network graph
     interactions = list(interaction_collection.find({}, {"_id": 0}))
+   
     edges = []
 
     for conversation in interactions:
@@ -73,49 +76,95 @@ def analyze_and_plot_data():
                 for j in range(i + 1, len(members)):
                     edges.append((members[i], members[j]))
 
-    # Create NetworkX graph and layout
+        # Create NetworkX graph and layout
     G = nx.Graph()
-    G.add_edges_from(edges)
-    pos = nx.spring_layout(G, seed=42)
+    G.add_edges_from(edges)     
 
-    # Prepare data for Plotly graphing
+    # Use a force-directed layout with more iterations for smoother layout
+    pos = nx.spring_layout(G, seed=42, k=0.5, iterations=100)
+
+    # Prepare edge coordinates
     edge_x, edge_y = [], []
     for edge in G.edges():
         x0, y0 = pos[edge[0]]
         x1, y1 = pos[edge[1]]
         edge_x += [x0, x1, None]
         edge_y += [y0, y1, None]
-
+ 
+    # Prepare node coordinates
     node_x, node_y = [], []
     for node in G.nodes():
         x, y = pos[node]
         node_x.append(x)
         node_y.append(y)
 
-    # Create edge and node traces for Plotly
-    edge_trace = go.Scatter(x=edge_x, y=edge_y, line=dict(width=0.5, color='#888'), hoverinfo='none', mode='lines')
+    # Compute node degrees for color/size
     degree_dict = dict(G.degree())
-    node_trace = go.Scatter(
-        x=node_x, y=node_y, mode='markers+text', hoverinfo='text',
-        text=[f"User ID: {node}<br>Connections: {degree_dict[node]}" for node in G.nodes()],
-        marker=dict(showscale=True, colorscale='YlGnBu', size=10, colorbar=dict(thickness=15, title='Node Connections'))
+    node_color = [degree_dict[node] for node in G.nodes()]
+    node_size = [5 + 10 * degree_dict[node] for node in G.nodes()]
+
+    # Edge trace with softer color
+    edge_trace = go.Scatter(
+        x=edge_x, y=edge_y,
+        line=dict(width=5, color='rgba(150, 150, 150, 0.4)'),
+        hoverinfo='none',
+        mode='lines'
     )
 
-    # Create Plotly figure for network graph
-    fig_network = go.Figure(data=[edge_trace, node_trace],
-                    layout=go.Layout(title='Interactive User Interaction Network', titlefont_size=16,
-                                     showlegend=False, hovermode='closest'))
+    # Node trace with modern colorscale
+    node_trace = go.Scatter(
+        x=node_x, y=node_y,
+        mode='markers+text',
+        hoverinfo='text',
+        text=[f"<b>User ID:</b> {node}<br><b>Connections:</b> {degree_dict[node]}" for node in G.nodes()],
+        marker=dict(
+            showscale=True,
+            colorscale='Viridis',
+            reversescale=True,
+            color=node_color,
+            size=node_size,
+            colorbar=dict(
+                thickness=15,
+                title='Connections',
+                xanchor='left',
+                
+            ),
+            line=dict(width=2, color='DarkSlateGrey')
+        )
+    )
+
+    # Create Plotly figure
+    fig_network = go.Figure(
+        data=[edge_trace, node_trace],
+        layout=go.Layout(
+            title=dict(text='Suspicious Users Connections Network', font=dict(size=20)),
+            showlegend=False,
+            hovermode='closest',
+            margin=dict(b=20, l=20, r=20, t=40),
+            paper_bgcolor='rgba(231, 76, 60)',
+            plot_bgcolor='rgba(231, 76, 60)',
+            xaxis=dict(showgrid=False, zeroline=False, showticklabels=False),
+            yaxis=dict(showgrid=False, zeroline=False, showticklabels=False)
+        )
+    )
+
 
     # Convert figures to JSON for frontend
-    kmeans_json = json.dumps(fig_kmeans, cls=plotly.utils.PlotlyJSONEncoder)
+
     network_json = json.dumps(fig_network, cls=plotly.utils.PlotlyJSONEncoder)
+
+
+    # Fetch flagged words and their counts
+    flagged_words_data = json_util.dumps(get_flagged_words())
+
   # Fetch flagged user data
-    flagged_users = flagged_user_collection.find({}, {"_id": 0})
-    print(flagged_users)
+    flagged_users = list(flagged_user_collection.find({}, {"_id": 0}))
+    json_flagged_users = json_util.dumps(flagged_users, indent=4)
+ 
     for user in flagged_users:
         user['suspicious_words'] = user.get('suspicious_words', [])
     # Emit JSON to frontend
-    socketio.emit('graph_update', {'kmeans': kmeans_json, 'network': network_json}, namespace='/admin')
+    socketio.emit('graph_update', {'network': network_json,'flagged_word': flagged_words_data, 'flagged_users': json_flagged_users}, namespace='/admin')
 
 # Route to load admin dashboard
 @app.route('/admin')
@@ -199,12 +248,6 @@ def index():
     sample_text = "have bm1 and ibo last had snow and blow"
     result = detect_drug_keywords(sample_text)
     return result 
-
-
-# Run app
-# if __name__ == '__main__':
-#     socketio.run(app, debug=True, port=8080)
-
 
 if __name__ == '__main__':
     port = int(os.environ.get("PORT", 7860))
