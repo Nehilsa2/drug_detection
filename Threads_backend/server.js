@@ -11,8 +11,11 @@ import { app, server } from "./socket/socket.js";
 import job from "./cron/cron.js";
 import cors from 'cors';
 
+const allowedorigins = ["https://threads-frontend-8fph.onrender.com",
+  "https://jhanducoder-drug-detection-ml.hf.space/admin"];
+
 app.use(cors({
-   origin: "https://threads-frontend-8fph.onrender.com", 
+   origin: allowedorigins, 
   credentials: true,
 }));
 
