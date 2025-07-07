@@ -4,6 +4,7 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Admin Dashboard</title>
+    <link rel="stylesheet" href="styles.css">
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
@@ -96,7 +97,7 @@
 
       .Btn-Container {
         display: flex;
-        width: 170px;
+       
         height: fit-content;
         background-color: #1d2129;
         border-radius: 40px;
@@ -106,8 +107,9 @@
         border: none;
         cursor: pointer;
         position: relative;
-        left: 42rem;
-        margin-top: 100px;
+        text-align: center;
+        margin: 100px auto;
+        
       }
 
       .icon-Container {
@@ -166,11 +168,21 @@
         animation: fadeInUp 1s ease-out forwards;
       }
 
-      #kmeans-graph,
-      #network-graph {
-        display: none;
+      #word-bar-chart,
+      #network-graph
+      {
+        display: block;
         height: 500px;
-        /* margin: 20px 0; */
+        margin: 20px 100px; 
+      }
+      #analysis-container {
+        display: none;
+        padding: 20px;
+        background-color: #f0f4f8;
+        border-radius: 10px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        max-width: 1400px;
+        margin: auto;
       }
 
       footer {
@@ -245,12 +257,13 @@
         </svg>
       </span>
     </button>
-
-    <h2>Clustering of flagged users</h2>
-    <div class="graph-container" id="kmeans-graph"></div>
+    <div id ="analysis-container" class="analysis-container">
+    
 
     <h2>Flagged User Interaction Network</h2>
     <div class="graph-container" id="network-graph"></div>
+      <h2>Suspicious Words Count</h2>
+    <div class="graph-container" id="word-bar-chart"></div>
 
     <!-- New Flagged Users Section -->
     <h2>Flagged User Data</h2>
@@ -270,37 +283,68 @@
         </tbody>
       </table>
     </div>
-
+    </div>
     <footer class="foot">Admin Dashboard &copy; Kitchen Coders</footer>
 
     <script>
-      const socket = io.connect("https://threads-backend-zi02.onrender.com/admin");
+      const socket = io("https://threads-backend-zi02.onrender.com/admin");
+      socket.on('connect', () => {
+    console.log('Connected to /admin');
+    
+});
 
       // Start analysis on button click
       document.getElementById("start-analysis").onclick = () => {
-        document.getElementById("kmeans-graph").style.display = "block";
-        document.getElementById("network-graph").style.display = "block";
+        document.getElementById("analysis-container").style.display = "block";
         socket.emit("start_analysis");
       };
 
       // Listen for graph updates
       socket.on("graph_update", (data) => {
-        Plotly.newPlot("kmeans-graph", JSON.parse(data.kmeans));
+        words_flagged = JSON.parse(data.flagged_word);
+        console.log(words_flagged);
         Plotly.newPlot("network-graph", JSON.parse(data.network));
+
+        // Prepare data for the word bar chart
+        const words = words_flagged.words;
+        const counts = words_flagged.counts;
+        const trace = [{
+          x: words,
+          y: counts,
+          type: "bar",
+          marker: {
+            color: "#629584",
+          },
+        }];
+
+        Plotly.newPlot("word-bar-chart", trace, {
+          title: 'Most Used Suspicious Words',
+          xaxis: {
+            title: 'Words',
+            tickangle: -45,
+          },
+          yaxis: {
+            title: 'Counts',
+          },
+        });
 
         // Populate flagged user table
         const tbody = document.getElementById("flagged-users-body");
-        tbody.innerHTML = ""; // Clear previous data
-        data.flagged_users.forEach((user) => {
-          const row = `<tr>
-                    <td>${user.user_id}</td>
-                    <td>${user.tag}</td>
-                    <td>${user.classes.join(", ")}</td>
-                    <td>${user.suspicious_word_count}</td>
-                    <td>${user.suspicious_words.join(", ")}</td>
-                </tr>`;
-          tbody.innerHTML += row;
-        });
+        tbody.innerHTML = ""; // Clear previous datauser
+        Users_flagged = JSON.parse(data.flagged_users);
+        console.log(Users_flagged);
+        let rows = Users_flagged.map((user) => {
+    return `<tr>
+              <td>${user.user_id?.$oid || user.user_id}</td>
+              <td>${user.tag}</td>
+              <td>${user.classes ? user.classes.join(", ") : "N/A"}</td>
+              <td>${user.suspicious_word_count}</td>
+              <td>${user.suspicious_words ? user.suspicious_words.join(", ") : "N/A"}</td>
+            </tr>`;
+  }).join("");
+
+  // Set the innerHTML of tbody
+  tbody.innerHTML = rows;
       });
     </script>
   </body>
