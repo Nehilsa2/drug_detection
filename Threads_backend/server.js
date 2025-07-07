@@ -12,7 +12,7 @@ import job from "./cron/cron.js";
 import cors from 'cors';
 
 const allowedorigins = ["https://threads-frontend-8fph.onrender.com",
-  "https://jhanducoder-drug-detection-ml.hf.space/admin"];
+  "https://jhanducoder-drug-detection-ml.hf.space"];
 
 app.use(cors({
    origin: allowedorigins, 
