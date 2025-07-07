@@ -6,6 +6,7 @@ import io
 import json
 from image_deteaction import img_detection
 from keyword_detection import detect_drug_keywords
+import os
 def monitor_changes(collection):
     """
     Continuously monitors a MongoDB collection for changes.
