@@ -6,9 +6,11 @@ import Conversation from "../models/conversationModel.js";
 
 const app = express();
 const server = http.createServer(app);
+const allowedorigins = ["https://threads-frontend-8fph.onrender.com",
+  "https://jhanducoder-drug-detection-ml.hf.space"];
 const io = new Server(server, {
 	cors: {
-		origin: "http://localhost:3000",
+		origin: allowedorigins,
 		methods: ["GET", "POST"],
 	},
 });
