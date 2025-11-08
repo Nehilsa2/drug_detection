@@ -1,4 +1,4 @@
-<h1 align="center">🚨 Drug Detection & Social Monitoring Dashboard 🚨</h1>
+<h1 align="center">🚨 Drug Detection & Social Monitoring 🚨</h1>
 
 <p align="center">
   <img src="https://img.shields.io/badge/Status-Active-success?style=flat-square"/>
