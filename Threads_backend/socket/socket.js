@@ -12,7 +12,9 @@ const io = new Server(server, {
 	cors: {
 		origin: allowedorigins,
 		methods: ["GET", "POST"],
+		credentials: true
 	},
+	 
 });
 
 export const getRecipientSocketId = (recipientId) => {
